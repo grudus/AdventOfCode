@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day10 {
 
     private String lookAndSay(String prev) {

@@ -1,4 +1,5 @@
-import java.io.UnsupportedEncodingException;
+package advent2015;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

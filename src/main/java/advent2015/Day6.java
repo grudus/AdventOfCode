@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day6 {
 
     private boolean[][] lights;

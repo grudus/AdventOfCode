@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day15 {
 
     public int wynik1(String input) {

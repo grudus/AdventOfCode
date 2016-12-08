@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day8 {
 
     private int allCharacters(String[] s) {

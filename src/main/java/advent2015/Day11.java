@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day11 {
 
     private String password = new String();

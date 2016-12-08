@@ -1,3 +1,5 @@
+package advent2015;
+
 import java.util.ArrayList;
 
 public class Day5 {

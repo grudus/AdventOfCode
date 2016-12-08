@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day2 {
 
     private int max(int a, int b, int c) {

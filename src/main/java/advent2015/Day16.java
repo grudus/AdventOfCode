@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day16 {
 
     private static final String[] itemsNames = {"children", "cats", "samoyeds" ,"pomeranians", "akitas",

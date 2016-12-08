@@ -1,3 +1,5 @@
+package advent2015;
+
 public class Day14 {
 
     private static final int TIME = 2503;
