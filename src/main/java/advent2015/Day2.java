@@ -1,46 +1,57 @@
 package advent2015;
 
-public class Day2 {
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    private int max(int a, int b, int c) {
-        if (a == Math.max(a, b) && a == Math.max(a, c)) return a;
-        if (b == Math.max(a, b) && b == Math.max(b, c)) return b;
-        else return c;
+public class Day2 extends Day {
+
+    public Day2(String input) {
+        super(input);
     }
 
-    public int wynik1(String s) {
-        int wynik = 0;
-        String[] lines = s.split("\\n");
-        String[] dims;
-        int x, y, z;
+    private final List<Cuboid> cuboids = Arrays.stream(inputString.split("\\n"))
+            .map(line -> {
+                int[] numbers = Arrays.stream(line.split("x")).mapToInt(Integer::parseInt).toArray();
+                return new Cuboid(numbers[0], numbers[1], numbers[2]);
+            }).collect(Collectors.toList());
 
-        for (int i = 0; i < lines.length; i++) {
-            dims = lines[i].split("x");
-            x = Integer.parseInt(dims[0]);
-            y = Integer.parseInt(dims[1]);
-            z = Integer.parseInt(dims[2]);
-            wynik += 2*x*y + 2*x*z + 2*y*z + (x == max(x, y, z) ? y*z : (y == max(x, y, z) ? x*z : x*y));
-        }
-
-        return wynik;
+    @Override
+    public String firstStar() {
+        return cuboids.stream().mapToInt(cuboid -> cuboid.area() + cuboid.smallestArea()).sum() + "";
     }
 
-    public int wynik2(String s) {
-        int wynik = 0;
-        String[] lines = s.split("\\n");
-        String[] dims;
-        int x, y, z;
+    @Override
+    public String secondStar() {
+        return cuboids.stream().mapToInt(cuboid -> cuboid.volume() + cuboid.ribbon()).sum() + "";
+    }
 
-        for (int i = 0; i < lines.length; i++) {
-            dims = lines[i].split("x");
-            x = Integer.parseInt(dims[0]);
-            y = Integer.parseInt(dims[1]);
-            z = Integer.parseInt(dims[2]);
+    class Cuboid {
+        final int a;
+        final int b;
+        final int c;
 
-            wynik += x*y*z + (x == max(x, y, z) ? 2*y+2*z : (y == max(x, y, z) ? 2*x+2*z : 2*x+2*y));
+        Cuboid(int a, int b, int c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
         }
 
+        int ribbon() {
+            return Arrays.stream(new int[]{a, b, c})
+                    .sorted().limit(2).reduce((i1, i2) -> i1 * 2 + i2 * 2).getAsInt();
+        }
 
-        return wynik;
+        int area() {
+            return 2 * a * b + 2 * b * c + 2 * a * c;
+        }
+
+        int volume() {
+            return a * b * c;
+        }
+
+        int smallestArea() {
+            return Math.min(Math.min(a * b, a * c), b * c);
+        }
     }
 }
