@@ -1,151 +1,63 @@
 package advent2015;
 
-public class Day3 {
+import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public int wynik1(String s) {
-        int wynik = 1;
-        int[][] domy;
-        int maxx, maxy;
-        int a, b, c, d;
-        a = b = c = d = 0;
-        int currX, currY;
+public class Day3 extends Day {
 
-        for (int i = 0; i < s.length(); i++) {
-            switch (s.charAt(i)) {
-                case '>': a++; break;
-                case '<': b++; break;
-                case '^': c++; break;
-                case 'v': d++; break;
-            }
-        }
-        maxx = Math.max(a, b);
-        maxy = Math.max(c, d);
 
-        currX = maxx;
-        currY = maxy;
-
-        domy = new int[maxx*2][maxy*2];
-
-        for (int i = 0; i < s.length(); i++) {
-            switch (s.charAt(i)) {
-                case '<':
-                    if (domy[--currX][currY] == 0) {
-                        domy[currX][currY]++;
-                        wynik++;
-                    }
-                    break;
-                case '>':
-                    if (domy[++currX][currY] == 0) {
-                        domy[currX][currY]++;
-                        wynik++;
-                    }
-                    break;
-                case '^':
-                    if (domy[currX][++currY] == 0) {
-                        domy[currX][currY]++;
-                        wynik++;
-                    }
-                    break;
-                case 'v':
-                    if (domy[currX][--currY] == 0) {
-                        domy[currX][currY]++;
-                        wynik++;
-                    }
-                    break;
-            }
-        }
-
-        return wynik;
+    public Day3(String input) {
+        super(input);
     }
 
-    int wynik2(String s) {
-        int wynik = 1;
-        int[][] domy;
-        int maxx, maxy;
-        int a, b, c, d;
-        a = b = c = d = 0;
-        int currSantaX, currSantaY, currRobotX, currRobotY;
+    enum Direction {
+        N(0, 1), E(1, 0), S(0, -1), W(-1, 0);
 
-        for (int i = 0; i < s.length(); i++) {
-            switch (s.charAt(i)) {
-                case '>': a++; break;
-                case '<': b++; break;
-                case '^': c++; break;
-                case 'v': d++; break;
-            }
-        }
-        maxx = Math.max(a, b);
-        maxy = Math.max(c, d);
+        final int dx, dy;
 
-        currRobotX = currSantaX = maxx;
-        currRobotY = currSantaY = maxy;
-
-        domy = new int[maxx*2+1][maxy*2+1];
-        domy[maxx][maxy] = 1;
-
-        for (int i = 0; i < s.length(); i++) {
-            if (i % 2 == 0) {
-                switch (s.charAt(i)) {
-                    case '<':
-                        if (domy[--currSantaX][currSantaY] == 0) {
-                            domy[currSantaX][currSantaY]++;
-                            wynik++;
-                        }
-                        break;
-                    case '>':
-                        if (domy[++currSantaX][currSantaY] == 0) {
-                            domy[currSantaX][currSantaY]++;
-                            wynik++;
-                        }
-                        break;
-                    case '^':
-                        if (domy[currSantaX][++currSantaY] == 0) {
-                            domy[currSantaX][currSantaY]++;
-                            wynik++;
-                        }
-                        break;
-                    case 'v':
-                        if (domy[currSantaX][--currSantaY] == 0) {
-                            domy[currSantaX][currSantaY]++;
-                            wynik++;
-                        }
-                        break;
-                }
-            }
-            else {
-                switch (s.charAt(i)) {
-                    case '<':
-                        if (domy[--currRobotX][currRobotY] == 0) {
-                            domy[currRobotX][currRobotY]++;
-                            wynik++;
-                        }
-                        break;
-                    case '>':
-                        if (domy[++currRobotX][currRobotY] == 0) {
-                            domy[currRobotX][currRobotY]++;
-                            wynik++;
-                        }
-                        break;
-                    case '^':
-                        if (domy[currRobotX][++currRobotY] == 0) {
-                            domy[currRobotX][currRobotY]++;
-                            wynik++;
-                        }
-                        break;
-                    case 'v':
-                        if (domy[currRobotX][--currRobotY] == 0) {
-                            domy[currRobotX][currRobotY]++;
-                            wynik++;
-                        }
-                        break;
-                }
-            }
-
-        }
-
-
-
-        return wynik;
+        Direction(int dx, int dy) {this.dx = dx; this.dy = dy;}
     }
 
+    private Point santaPosition = new Point(0, 0);
+    private Point robotPosition = new Point(0, 0);
+
+    private List<Direction> directions = inputString.chars().mapToObj(Char -> {
+        switch ((char) Char) {
+            case '^': return Direction.N;
+            case '>': return Direction.E;
+            case 'v': return Direction.S;
+            default: return Direction.W;
+        }
+    }).collect(Collectors.toList());
+
+    private List<Point> santaPositions() {
+        return directions.stream().map(dir -> changePositionAndGet(dir, santaPosition)).collect(Collectors.toList());
+    }
+
+    private List<Point> santaAndRobotPositions() {
+        return new Array<>(directions).mapIndexed((index, dir) ->
+                (index % 2 == 0 ? changePositionAndGet(dir, santaPosition)
+                        : changePositionAndGet(dir, robotPosition))).toList();
+    }
+
+    private Point changePositionAndGet(Direction dir, Point position) {
+        position.setLocation(position.x + dir.dx, position.y + dir.dy);
+        return position.getLocation();
+    }
+
+    @Override
+    public String firstStar() {
+        return countDistinctPositions(santaPositions()) + "";
+    }
+
+    @Override
+    public String secondStar() {
+        return countDistinctPositions(santaAndRobotPositions()) + "";
+    }
+
+    private long countDistinctPositions(List<Point> positions) {
+        return positions.stream().distinct().count()
+                + (positions.contains(new Point(0, 0)) ? 0 : 1);
+    }
 }

@@ -190,6 +190,10 @@ public class Array<T> {
         return new Array<>(temp);
     }
 
+    public List<T> toList() {
+        return objects;
+    }
+
 
     public static class Pair<A, B> {
         public final A first;
