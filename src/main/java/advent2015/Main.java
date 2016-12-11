@@ -6,15 +6,8 @@ public class Main {
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
 
-        Day6 d = new Day6(null);
+        Day7 d = new Day7(null);
 
         System.out.println(d.firstStar());
-        d.lights = new int[1000][1000];
-        System.out.println(d.secondStar());
-
-
-
     }
-
-
 }
